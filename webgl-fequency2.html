@@ -106,11 +106,11 @@ label.file.normal{
 <body>
   <div id="content">
     
-    <label for="thefile" class="file"> Choose an audio file
+    <label style="display:none;" for="thefile" class="file"> Choose an audio file
       <input type="file" id="thefile" accept="audio/*" />
     </label>
 
-    <audio id="audio" controls></audio>
+    <audio id="audio" controls src="./src/assets/miku.mp3"></audio>
     <div id="out"></div>
   </div>
   <script src="./src/three-cloud.js"></script>

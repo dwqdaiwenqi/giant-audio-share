@@ -220,12 +220,12 @@ loadAudio(media).then(function (asource) {
     cax.tick(function () {
         stage.update();
         if (play) {
-            var avg_1 = getAvg(frequencyData);
+            var avg = getAvg(frequencyData);
             analyser.getByteFrequencyData(frequencyData);
             fqbBot.update(frequencyData.slice(0, frequencyData.length * 0.5 | 0));
             fqbTop.update(frequencyData.slice(0, frequencyData.length * 0.5 | 0));
-            variants.update(frequencyData.slice(0, frequencyData.length * 0.5 | 0), avg_1);
-            text.scaleX = text.scaleY = 1 + avg_1 * 0.01;
+            variants.update(frequencyData.slice(0, frequencyData.length * 0.5 | 0), avg);
+            text.scaleX = text.scaleY = 1 + avg * 0.01;
         }
     });
 });
