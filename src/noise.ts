@@ -1,9 +1,3 @@
-
-
-
-
-
-
  var context = new(window.AudioContext || window.webkitAudioContext)();
  var analyser = context.createAnalyser();
  analyser.fftSize = 512;
