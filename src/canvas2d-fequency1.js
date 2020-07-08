@@ -37,7 +37,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 // //       Math.ceil(stage.width / (r * 2 + gap * 1)),
 // //       Math.ceil(stage.height / (r * 2 + gap * 1))
 // //     ]
-///
+////////
 // //     for (let i = 0; i < row; i++) {
 // //       for (let j = 0; j < ceil; j++) {
 // //         // let variant = new Variant(r, 'pink')
@@ -387,15 +387,17 @@ onload = function () {
     analyser.fftSize = 512;
     var canPlay = false;
     var dataArray;
+    var timeDomainData;
     $play.onclick = function () {
         $audio.play();
         $play.style.display = 'none';
         var source = context.createMediaElementSource($audio);
         source.connect(analyser);
         analyser.connect(context.destination);
-        var bufferLength = analyser.frequencyBinCount;
+        var bufferLength = analyser.frequencyBinCount; // half fftSize
         dataArray = new Uint8Array(bufferLength);
         // analyser.getByteFrequencyData(dataArray)
+        timeDomainData = new Uint8Array(analyser.fftSize); //fftSize
         canPlay = true;
     };
     var lineStyle = '#' + Math.floor(Math.random() * 0xffffff).toString(16);
@@ -406,6 +408,14 @@ onload = function () {
         //circle.render(c)
         if (canPlay) {
             analyser.getByteFrequencyData(dataArray);
+            analyser.getByteTimeDomainData(timeDomainData);
+            // console.log('timeDomainData:',)
+            // (1 - (times[i] / 255)) * canvas.height;
+            var times = [].slice.call(timeDomainData);
+            times = times.map(function (v) {
+                return 1 - v / 255;
+            });
+            console.log(times);
             var pointsNum_1 = 101;
             drawClosedCurve({
                 showPoints: true,
@@ -451,15 +461,6 @@ onload = function () {
             });
         }
     });
-    // window.rad = 0
-    // onmousemove = (e)=>{
-    //   var [x,y] = [e.pageX,e.pageY]
-    //   window.rad = Math.atan2(
-    //     (e.pageY - document.body.offsetHeight*.5),
-    //     (e.pageX - document.body.offsetWidth*.5)
-    //   )+Math.PI*.5
-    //   console.log(window.rad)
-    // }
     var drawClosedCurve = function (_a) {
         var points = _a.points, start = _a.start, ctx = _a.ctx, showPoints = _a.showPoints;
         var ctrlPoint = {};

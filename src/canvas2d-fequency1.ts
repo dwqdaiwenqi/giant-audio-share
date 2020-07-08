@@ -1,4 +1,3 @@
-
 // // // https://kelvinau.github.io/circular-audio-wave/demo/circular-wave.html
 // // const cax = window.cax
 
@@ -36,7 +35,7 @@
 
 
 
-///
+////////
 // //     for (let i = 0; i < row; i++) {
 // //       for (let j = 0; j < ceil; j++) {
 // //         // let variant = new Variant(r, 'pink')
@@ -439,6 +438,7 @@ onload = ()=>{
   analyser.fftSize = 512
   let canPlay:boolean = false
   let dataArray:Uint8Array
+  let timeDomainData:Uint8Array
 
   $play.onclick = ()=>{
     $audio.play()
@@ -449,9 +449,11 @@ onload = ()=>{
       
     source.connect(analyser);
     analyser.connect(context.destination);
-    const bufferLength:number = analyser.frequencyBinCount;
+    const bufferLength:number = analyser.frequencyBinCount; // half fftSize
+
     dataArray = new Uint8Array(bufferLength); 
     // analyser.getByteFrequencyData(dataArray)
+    timeDomainData = new Uint8Array(analyser.fftSize) //fftSize
 
     canPlay = true
   
@@ -469,6 +471,19 @@ onload = ()=>{
     if(canPlay){
       
       analyser.getByteFrequencyData(dataArray)
+
+      analyser.getByteTimeDomainData(timeDomainData)
+
+      // console.log('timeDomainData:',)
+
+
+      // (1 - (times[i] / 255)) * canvas.height;
+
+      var times = [].slice.call(timeDomainData)
+      times = times.map((v)=>{
+        return 1- v/255
+      })
+      console.log(times)
 
       const pointsNum = 101
       drawClosedCurve({
@@ -532,18 +547,6 @@ onload = ()=>{
       })
     }
   })
-
-  // window.rad = 0
-  // onmousemove = (e)=>{
-  //   var [x,y] = [e.pageX,e.pageY]
-  //   window.rad = Math.atan2(
-  //     (e.pageY - document.body.offsetHeight*.5),
-  //     (e.pageX - document.body.offsetWidth*.5)
-  //   )+Math.PI*.5
-
-  //   console.log(window.rad)
-  // }
-  
   
     const drawClosedCurve = ({ points, start, ctx, showPoints }) => {
         const ctrlPoint = {}
