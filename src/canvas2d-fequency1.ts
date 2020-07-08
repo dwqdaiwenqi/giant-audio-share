@@ -34,6 +34,9 @@
 // //       Math.ceil(stage.height / (r * 2 + gap * 1))
 // //     ]
 
+
+
+///
 // //     for (let i = 0; i < row; i++) {
 // //       for (let j = 0; j < ceil; j++) {
 // //         // let variant = new Variant(r, 'pink')
