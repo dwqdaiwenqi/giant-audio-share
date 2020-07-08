@@ -257,9 +257,6 @@ onload = ()=>{
         // radius 1 ---- 0
         vertex.normalize()
         
-
-
-  
         let seed = 0.5 * (simplex.noise3D(
           // vertex.x*radius / scale, 
           // vertex.y*radius / scale, 
