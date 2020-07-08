@@ -470,5 +470,47 @@ onload = ()=>{
 
   //   console.log(window.rad)
   // }
+  
+  
+//   const drawClosedCurve = ({ points, start, end, ctx, showPoints }) => {
+//         const ctrlPoint = {}
+//         const ctrlPoint1 = {}
+//         ctrlPoint1.x = (points[0].x + points[points.length - 1].x) * .5
+//         ctrlPoint1.y = (points[0].y + points[points.length - 1].y) * .5
+//         ctx.save()
+//         start(ctx)
+//         ctx.beginPath()
+//         ctx.moveTo(ctrlPoint1.x, ctrlPoint1.y)
+//         for (let i = 0; i < points.length - 1; i++) {
+//           ctrlPoint.x = (points[i].x + points[i + 1].x) / 2
+//           ctrlPoint.y = (points[i].y + points[i + 1].y) / 2
+//           ctx.quadraticCurveTo(points[i].x, points[i].y, ctrlPoint.x, ctrlPoint.y)
+
+//           if (showPoints) c.fillRect(points[i].x, points[i].y, 3, 3)
+//         }
+//         c.quadraticCurveTo(points[points.length - 1].x, points[points.length - 1].y, ctrlPoint1.x, ctrlPoint1.y)
+//         ctx.stroke()
+//         ctx.restore()
+//       }
+
+//       drawClosedCurve({
+//         showPoints: true,
+//         points: [...Array(pointsNum)].map((v, i) => {
+
+//           let frAvg = .01
+//           let t = simplex.noise2D(i / (pointsNum * Math.max((1 - frAvg), .01)), 1)
+//           let selfRadius = radius + t * radiusOffset
+//           let x = w * .5 + Math.cos(i / (pointsNum - 1) * Math.PI * 2) * selfRadius
+//           let y = h * .5 + Math.sin(i / (pointsNum - 1) * Math.PI * 2) * selfRadius
+
+//           return {
+//             x, y
+//           }
+//         }),
+//         ctx: c,
+//         start(ctx) {
+//           ctx.strokeStyle = 'rgba(255,0,255,1)'
+//         }
+//       })
 
 }
