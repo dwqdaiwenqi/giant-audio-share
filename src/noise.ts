@@ -85,28 +85,20 @@ function avg(arr){
                 mix(mix( d, f, u.x),
                     mix( g, h, u.x), u.y), u.z);
     }
-  
-  
-     
-      attribute float opacity;
+
       
       uniform float time;
       uniform float frAvg;
       varying vec3 v_normal;
-      // varying float v_addLength;
-      varying float v_color;
-      varying float v_opacity;
       
       void main() {
   
         v_normal = normal;
-        v_opacity = opacity;
         
 
         float maxLength = 7.7;
         float addLength = maxLength * noise_perlin(normalize(position) * frAvg*10.0 + vec3(time * 1.0));
   
-        v_color = .7;
         vec3 newPosition = position + normal * (addLength + frAvg*100.);
   
         vec4 mPosition = modelViewMatrix * vec4(newPosition, 1.0);
@@ -115,17 +107,11 @@ function avg(arr){
       }
   `;
       const FRAGMENT_SHADER = `
-      varying float v_opacity;
       varying vec3 v_normal;
-      varying float v_color;
       
       void main() {
-        // vec3 color = normalize(v_color * 0.5 + 0.5 * v_normal + 0.1) * (v_color + 0.1) * 2.0;
-        vec3 color = (v_color * 0.05) + v_normal + 0.5;
-        color.x += v_color * 0.2;
-        color.z += v_color * 0.2;
-        gl_FragColor = vec4(normalize(color) , v_opacity);
-          // gl_FragColor = vec4(v_opacity,v_opacity,v_opacity,v_opacity);
+        vec3 color = v_normal+vec3(.5);
+        gl_FragColor = vec4(normalize(color) , 1.);
       }
   `;
       const radius = 100;
