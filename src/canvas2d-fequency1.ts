@@ -23,28 +23,31 @@ onload = ()=>{
   const matHeight = 300
 
   const $play:HTMLDivElement = document.querySelector('#play')
-  const $audio:HTMLAudioElement = document.querySelector('audio')
-  const context:AudioContext = new(window.AudioContext || window.webkitAudioContext)();
-  const analyser:AnalyserNode = context.createAnalyser()
-  analyser.fftSize = 512
+
   let canPlay:boolean = false
   let dataArray:Uint8Array
  
 
   $play.onclick = ()=>{
-    $audio.play()
    
     $play.style.display = 'none'
 
-    const source:MediaElementAudioSourceNode = context.createMediaElementSource($audio);
-      
-    source.connect(analyser);
-    analyser.connect(context.destination);
-    const bufferLength:number = analyser.frequencyBinCount; // half fftSize
+    // const source:MediaElementAudioSourceNode = context.createMediaElementSource($audio);
+    // source.connect(analyser);
+    // analyser.connect(context.destination);
+    // const bufferLength:number = analyser.frequencyBinCount; // half fftSize
+    // dataArray = new Uint8Array(bufferLength);
 
-    dataArray = new Uint8Array(bufferLength); 
+    // canPlay = true
 
-    canPlay = true
+    loadAudio('./src/assets/miku.mp3').then(({analyser,source})=>{
+      window.analyser = analyser
+      window.source = source
+      source.start()
+      dataArray = new Uint8Array(analyser.frequencyBinCount);
+      canPlay = true
+
+    })
   
   }
 
@@ -67,11 +70,9 @@ onload = ()=>{
 
     c.restore()
 
-
     if(canPlay){
       
       analyser.getByteFrequencyData(dataArray)
-
 
       const pointsNum = 101
       drawClosedCurve({
@@ -110,19 +111,33 @@ onload = ()=>{
 
           var frequencyData = dataArray.slice(0,dataArray.length*.5)
         
-          var frAvg = Math.pow(getAvg(frequencyData)/255,.5)
-
-          let t = simplex.noise3D(
-            Math.cos(i / (pointsNum ) * Math.PI * 2),
-            Math.sin(i / (pointsNum ) * Math.PI * 2),
+          const frAvg:number = Math.pow(getAvg(frequencyData)/255,.5)
+          
+          const x:number = Math.cos(i / (pointsNum ) * Math.PI * 2)
+          const y:number = Math.sin(i / (pointsNum ) * Math.PI * 2)
+          
+          const noise:number = simplex.noise3D(
+            x,
+            y,
             frAvg*2
           )
-          let selfRadius = 150 + t*20
-          let x = width * .5 + Math.cos(i / (pointsNum ) * Math.PI * 2) * selfRadius
-          let y = height * .5 + Math.sin(i / (pointsNum ) * Math.PI * 2) * selfRadius
+          let selfRadius = 150 + noise*20
+
+          
+          // 初始坐标为圆参数方程
+          // 噪声进行随机平滑，使用节拍强度作为噪声的偏移量
+          // 多个二次贝塞尔曲线进行平滑连接
+
+          /////////////////////
+
+          // // let selfRadius = 150 + t*20
+          // let x = width * .5 + Math.cos(i / (pointsNum ) * Math.PI * 2) * 150
+          // let y = height * .5 + Math.sin(i / (pointsNum ) * Math.PI * 2) * 150
+
 
           return {
-            x, y
+            x:width * .5 + x * selfRadius, 
+            y:height * .5 + y * selfRadius
           }
         }),
         ctx: c,
@@ -135,26 +150,4 @@ onload = ()=>{
       })
     }
   })
-
-    const drawClosedCurve = ({ points, start, ctx, showPoints }) => {
-        const ctrlPoint = {}
-        const ctrlPoint1 = {}
-        ctrlPoint1.x = (points[0].x + points[points.length - 1].x) * .5
-        ctrlPoint1.y = (points[0].y + points[points.length - 1].y) * .5
-        ctx.save()
-        start(ctx)
-        ctx.beginPath()
-        ctx.moveTo(ctrlPoint1.x, ctrlPoint1.y)
-        for (let i = 0; i < points.length - 1; i++) {
-          ctrlPoint.x = (points[i].x + points[i + 1].x) / 2
-          ctrlPoint.y = (points[i].y + points[i + 1].y) / 2
-          ctx.quadraticCurveTo(points[i].x, points[i].y, ctrlPoint.x, ctrlPoint.y)
-
-          if (showPoints) {
-            c.fillRect(points[i].x, points[i].y, 3, 3)
-          }
-        }
-        c.quadraticCurveTo(points[points.length - 1].x, points[points.length - 1].y, ctrlPoint1.x, ctrlPoint1.y)
-        ctx.stroke()
-        ctx.restore()
-      }
+}

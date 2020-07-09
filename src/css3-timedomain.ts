@@ -1,4 +1,19 @@
-const VerticalRect = ({width,height,map})=>{
+interface IVerticalRect {
+  (param:any): any;
+}
+
+interface IScaleTimeDomain{
+  (param:IScaleTimeDomainParams):any
+}
+
+type IScaleTimeDomainParams = {
+  map:string
+  width:number
+  height:number
+  slices:number
+}
+
+const VerticalRect:IVerticalRect = ({width,height,map})=>{
   const that = {
     $el:document.createElement('div'),
     $mat:document.createElement('img'),
@@ -19,16 +34,18 @@ const VerticalRect = ({width,height,map})=>{
     render(){
       this.$el.style.background = `url(${this.$mat.src})`
       this.$el.style.backgroundPosition = `${-this.x}px 0px`
+
       this.$el.style.transform = `
         translate3d(${this.x}px,${this.y}px,0) 
         scaleY(${this.scaleY})
       `
+     
     }
   }
   that.init()
   return that
 }
-const scaleTimeDomain = ({map,width,height,slices,offset})=>{
+const scaleTimeDomain = ({map,width,height,slices}:IScaleTimeDomainParams)=>{
   const $el:HTMLDivElement = document.createElement('div')
  
   $el.className = 'ScaleTimeDomain-owo'
@@ -74,17 +91,25 @@ const scaleTimeDomain = ({map,width,height,slices,offset})=>{
         translate3d(${this.x}px,${this.y}px,0) 
         scale(${this.scale})
       `
+
     },
     run(timeDomainData:Uint8Array){
       this.offsets = Array.from({length:slices},(v,i)=>{
         return timeDomainData[i/slices*timeDomainData.length|0]/255 * 2
       })
-
+      
     }
   }
 }
 
 onload = ()=>{
+
+
+  
+
+
+  var media = './src/assets/miku.mp3'
+
 
   const [width,height] = [document.body.offsetWidth,document.body.offsetHeight]
   const timedomain1 = scaleTimeDomain({
@@ -107,24 +132,21 @@ onload = ()=>{
   document.body.appendChild(timedomain2.$el)
   
   const $play:HTMLDivElement = document.querySelector('#play')
-  const $audio:HTMLAudioElement = document.querySelector('audio')
-  const context:AudioContext = new(window.AudioContext || window.webkitAudioContext)();
-  const analyser:AnalyserNode = context.createAnalyser()
-  analyser.fftSize = 512
+
   let canPlay:boolean = false
   let timeDomainData:Uint8Array
   
   $play.onclick = ()=>{
-    $audio.play()
-    
+  
     $play.style.display = 'none'
   
-    const source:MediaElementAudioSourceNode = context.createMediaElementSource($audio);
-    source.connect(analyser);
-    analyser.connect(context.destination);
-    timeDomainData = new Uint8Array(analyser.fftSize) 
-  
-    canPlay = true
+    loadAudio(media).then(({analyser,source})=>{
+      window.source = source
+      window.analyser = analyser
+      source.start()
+      timeDomainData = new Uint8Array(analyser.fftSize)
+      canPlay = true
+    })
   }
   
   
@@ -141,9 +163,12 @@ onload = ()=>{
 
     if(canPlay){
       analyser.getByteTimeDomainData(timeDomainData)
+      
       timedomain1.run(timeDomainData)
       timedomain2.run(timeDomainData)
     }
     
   })
 }
+
+

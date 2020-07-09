@@ -27,7 +27,7 @@ var VerticalRect = function (_a) {
     return that;
 };
 var scaleTimeDomain = function (_a) {
-    var map = _a.map, width = _a.width, height = _a.height, slices = _a.slices, offset = _a.offset;
+    var map = _a.map, width = _a.width, height = _a.height, slices = _a.slices;
     var $el = document.createElement('div');
     $el.className = 'ScaleTimeDomain-owo';
     Object.assign($el.style, {
@@ -75,6 +75,7 @@ var scaleTimeDomain = function (_a) {
     };
 };
 onload = function () {
+    var media = './src/assets/miku.mp3';
     var _a = [document.body.offsetWidth, document.body.offsetHeight], width = _a[0], height = _a[1];
     var timedomain1 = scaleTimeDomain({
         map: './src/assets/qiuqiu1.png',
@@ -92,20 +93,18 @@ onload = function () {
     timedomain2.scale = .5;
     document.body.appendChild(timedomain2.$el);
     var $play = document.querySelector('#play');
-    var $audio = document.querySelector('audio');
-    var context = new (window.AudioContext || window.webkitAudioContext)();
-    var analyser = context.createAnalyser();
-    analyser.fftSize = 512;
     var canPlay = false;
     var timeDomainData;
     $play.onclick = function () {
-        $audio.play();
         $play.style.display = 'none';
-        var source = context.createMediaElementSource($audio);
-        source.connect(analyser);
-        analyser.connect(context.destination);
-        timeDomainData = new Uint8Array(analyser.fftSize);
-        canPlay = true;
+        loadAudio(media).then(function (_a) {
+            var analyser = _a.analyser, source = _a.source;
+            window.source = source;
+            window.analyser = analyser;
+            source.start();
+            timeDomainData = new Uint8Array(analyser.fftSize);
+            canPlay = true;
+        });
     };
     requestAnimationFrame(function animate() {
         requestAnimationFrame(animate);

@@ -26,21 +26,24 @@ onload = function () {
     var matWidth = 300;
     var matHeight = 300;
     var $play = document.querySelector('#play');
-    var $audio = document.querySelector('audio');
-    var context = new (window.AudioContext || window.webkitAudioContext)();
-    var analyser = context.createAnalyser();
-    analyser.fftSize = 512;
     var canPlay = false;
     var dataArray;
     $play.onclick = function () {
-        $audio.play();
         $play.style.display = 'none';
-        var source = context.createMediaElementSource($audio);
-        source.connect(analyser);
-        analyser.connect(context.destination);
-        var bufferLength = analyser.frequencyBinCount; // half fftSize
-        dataArray = new Uint8Array(bufferLength);
-        canPlay = true;
+        // const source:MediaElementAudioSourceNode = context.createMediaElementSource($audio);
+        // source.connect(analyser);
+        // analyser.connect(context.destination);
+        // const bufferLength:number = analyser.frequencyBinCount; // half fftSize
+        // dataArray = new Uint8Array(bufferLength);
+        // canPlay = true
+        loadAudio('./src/assets/miku.mp3').then(function (_a) {
+            var analyser = _a.analyser, source = _a.source;
+            window.analyser = analyser;
+            window.source = source;
+            source.start();
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            canPlay = true;
+        });
     };
     var lineStyle = '#' + Math.floor(Math.random() * 0xffffff).toString(16);
     var lineStyle2 = '#' + Math.floor(Math.random() * 0xffffff).toString(16);
@@ -85,12 +88,20 @@ onload = function () {
                 points: __spreadArrays(Array(pointsNum_1)).map(function (v, i) {
                     var frequencyData = dataArray.slice(0, dataArray.length * .5);
                     var frAvg = Math.pow(getAvg(frequencyData) / 255, .5);
-                    var t = simplex.noise3D(Math.cos(i / (pointsNum_1) * Math.PI * 2), Math.sin(i / (pointsNum_1) * Math.PI * 2), frAvg * 2);
-                    var selfRadius = 150 + t * 20;
-                    var x = width * .5 + Math.cos(i / (pointsNum_1) * Math.PI * 2) * selfRadius;
-                    var y = height * .5 + Math.sin(i / (pointsNum_1) * Math.PI * 2) * selfRadius;
+                    var x = Math.cos(i / (pointsNum_1) * Math.PI * 2);
+                    var y = Math.sin(i / (pointsNum_1) * Math.PI * 2);
+                    var noise = simplex.noise3D(x, y, frAvg * 2);
+                    var selfRadius = 150 + noise * 20;
+                    // 初始坐标为圆参数方程
+                    // 噪声进行随机平滑，使用节拍强度作为噪声的偏移量
+                    // 多个二次贝塞尔曲线进行平滑连接
+                    /////////////////////
+                    // // let selfRadius = 150 + t*20
+                    // let x = width * .5 + Math.cos(i / (pointsNum ) * Math.PI * 2) * 150
+                    // let y = height * .5 + Math.sin(i / (pointsNum ) * Math.PI * 2) * 150
                     return {
-                        x: x, y: y
+                        x: width * .5 + x * selfRadius,
+                        y: height * .5 + y * selfRadius
                     };
                 }),
                 ctx: c,
@@ -103,26 +114,4 @@ onload = function () {
             });
         }
     });
-    var drawClosedCurve = function (_a) {
-        var points = _a.points, start = _a.start, ctx = _a.ctx, showPoints = _a.showPoints;
-        var ctrlPoint = {};
-        var ctrlPoint1 = {};
-        ctrlPoint1.x = (points[0].x + points[points.length - 1].x) * .5;
-        ctrlPoint1.y = (points[0].y + points[points.length - 1].y) * .5;
-        ctx.save();
-        start(ctx);
-        ctx.beginPath();
-        ctx.moveTo(ctrlPoint1.x, ctrlPoint1.y);
-        for (var i = 0; i < points.length - 1; i++) {
-            ctrlPoint.x = (points[i].x + points[i + 1].x) / 2;
-            ctrlPoint.y = (points[i].y + points[i + 1].y) / 2;
-            ctx.quadraticCurveTo(points[i].x, points[i].y, ctrlPoint.x, ctrlPoint.y);
-            if (showPoints) {
-                c.fillRect(points[i].x, points[i].y, 3, 3);
-            }
-        }
-        c.quadraticCurveTo(points[points.length - 1].x, points[points.length - 1].y, ctrlPoint1.x, ctrlPoint1.y);
-        ctx.stroke();
-        ctx.restore();
-    };
 };
