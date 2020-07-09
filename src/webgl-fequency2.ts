@@ -190,8 +190,6 @@ onload = ()=>{
  
    var $audio = document.querySelector('#audio')
 
-   
- 
    var source = context.createMediaElementSource($audio);
    
    source.connect(analyser);
@@ -236,7 +234,6 @@ onload = ()=>{
     ball.position.set(0, 0, 0);
     scene.add(ball)
 
-   
    setInterval(()=>{
      analyser.getByteFrequencyData(dataArray);
 
