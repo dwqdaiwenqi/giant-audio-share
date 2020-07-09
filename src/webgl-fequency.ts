@@ -23,8 +23,8 @@ $play.onclick = ()=>{
   })
 }
 
-let now = new Date();
-let pre = now;
+let now:number = +new Date();
+let pre:number = now;
       
 let scene = new THREE.Scene();
 let camera = new THREE.PerspectiveCamera(
@@ -83,19 +83,13 @@ float noise_perlin (vec3 p) {
   uniform float time;
   uniform float frAvg;
   varying vec3 v_normal;
-  
   void main() {
-
     v_normal = normal;
-    
     float maxLength = 7.7;
     float addLength = maxLength * noise_perlin(normalize(position) * frAvg*10.0 + vec3(time * 1.0));
-
     vec3 newPosition = position + normal * (addLength + frAvg*100.);
-
     vec4 mPosition = modelViewMatrix * vec4(newPosition, 1.0);
     gl_PointSize = max(.2, frAvg*3.);
-   
     gl_Position = projectionMatrix * mPosition;
   }
 `,
@@ -163,12 +157,11 @@ requestAnimationFrame(function animate(){
 
   if(canPlay){
     analyser.getByteFrequencyData(dataArray)
-
+    now = Date.now()
 
     material.uniforms.frAvg.value = Math.pow(avg(dataArray)/(255),.5)
-
-    now = new Date();
-    material.uniforms.time.value += (now - pre) * 0.0008;
+    material.uniforms.time.value += (now - pre) * .0008
+    
     pre = now;
 
   }

@@ -1,25 +1,24 @@
-var loadAudio = (url) => {
-  var actx = new(window.AudioContext || window.webkitAudioContext)()
-  var analyser
-  var xhr = new window.XMLHttpRequest()
+interface ILoadAudo{
+  (url:string):Promise<ILoadAudoResult>
+}
+type ILoadAudoResult = {analyser:AnalyserNode,source:AudioBufferSourceNode}
+const loadAudio:ILoadAudo = (url:string):Promise<ILoadAudoResult> => {
+  const actx:AudioContext = new(window.AudioContext || window.webkitAudioContext)()
+  const xhr:XMLHttpRequest = new window.XMLHttpRequest()
   xhr.open('GET', url, true)
   xhr.responseType = 'arraybuffer'
-  return new Promise(resolve => {
-
+  return new Promise((resolve:any) => {
     xhr.onload = () => {
-      
-      // resolve(xhr.response)
-      analyser = actx.createAnalyser()
+      const analyser:AnalyserNode = actx.createAnalyser()
       analyser.fftSize = 512
-      actx.decodeAudioData(xhr.response, buffer => {
-        var source = actx.createBufferSource()
+      actx.decodeAudioData(xhr.response, (buffer:AudioBuffer) => {
+        const source:AudioBufferSourceNode= actx.createBufferSource()
         source.buffer = buffer
         source.loop = true
-        var splitter = actx.createChannelSplitter()
+        const splitter = actx.createChannelSplitter()
         source.connect(splitter)
         splitter.connect(analyser, 0, 0)
         analyser.connect(actx.destination)
-       
         resolve({analyser,source})
       })
     }

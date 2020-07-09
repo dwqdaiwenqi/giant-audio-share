@@ -1,14 +1,12 @@
 "use strict";
 var loadAudio = function (url) {
     var actx = new (window.AudioContext || window.webkitAudioContext)();
-    var analyser;
     var xhr = new window.XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'arraybuffer';
     return new Promise(function (resolve) {
         xhr.onload = function () {
-            // resolve(xhr.response)
-            analyser = actx.createAnalyser();
+            var analyser = actx.createAnalyser();
             analyser.fftSize = 512;
             actx.decodeAudioData(xhr.response, function (buffer) {
                 var source = actx.createBufferSource();
