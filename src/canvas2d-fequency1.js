@@ -6,21 +6,13 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-var simplex = new SimplexNoise();
 onload = function () {
+    var simplex = new window.SimplexNoise();
     var $canvas = document.querySelector('canvas');
     var c = $canvas.getContext('2d');
     var _a = [document.body.offsetWidth, document.body.offsetHeight], width = _a[0], height = _a[1];
     $canvas.width = width;
     $canvas.height = height;
-    var getAvg = function (frequencyData) {
-        var value = 0;
-        var values = [].slice.call(frequencyData);
-        values.forEach(function (v) {
-            value += v;
-        });
-        return value / values.length;
-    };
     var $mat = document.createElement('img');
     $mat.src = './src/assets/hutao-poster.jpeg';
     var matWidth = 300;
@@ -60,7 +52,7 @@ onload = function () {
                 showPoints: false,
                 points: __spreadArrays(Array(pointsNum_1)).map(function (v, i) {
                     var frequencyData = dataArray.slice(0, dataArray.length * .5);
-                    var frAvg = Math.pow(getAvg(frequencyData) / 255, .3);
+                    var frAvg = Math.pow(avg(frequencyData) / 255, .3);
                     var t = simplex.noise3D(Math.cos(i / (pointsNum_1) * Math.PI * 2), Math.sin(i / (pointsNum_1) * Math.PI * 2), frAvg * 2);
                     var selfRadius = 140 + t * 20;
                     var x = width * .5 + Math.cos(i / (pointsNum_1) * Math.PI * 2) * selfRadius;

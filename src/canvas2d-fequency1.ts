@@ -1,28 +1,19 @@
 
-var simplex = new SimplexNoise()
-onload = ()=>{
-  const $canvas:HTMLCanvasElement = document.querySelector('canvas')
+onload = ():void=>{
+  const simplex = new window.SimplexNoise()
+  const $canvas:HTMLCanvasElement = document.querySelector('canvas') as HTMLCanvasElement
   const c:CanvasRenderingContext2D = $canvas.getContext('2d') as CanvasRenderingContext2D
   const [width,height] = [document.body.offsetWidth,document.body.offsetHeight]
   $canvas.width  =width
   $canvas.height = height
 
-  var getAvg = (frequencyData) => {
-    var value = 0
-    var values = [].slice.call(frequencyData)
-    values.forEach(function (v) {
-      value += v
-    })
-    return value / values.length
-  }
 
-
-  const $mat = document.createElement('img')
+  const $mat:HTMLImageElement = document.createElement('img')
   $mat.src = './src/assets/hutao-poster.jpeg'
   const matWidth = 300
   const matHeight = 300
 
-  const $play:HTMLDivElement = document.querySelector('#play')
+  const $play:HTMLDivElement = document.querySelector('#play') as HTMLDivElement
 
   let canPlay:boolean = false
   let dataArray:Uint8Array
@@ -43,10 +34,10 @@ onload = ()=>{
   
   }
 
-  const lineStyle = '#'+Math.floor(Math.random()*0xffffff).toString(16)
-  const lineStyle2 = '#'+Math.floor(Math.random()*0xffffff).toString(16)
+  const lineStyle:string = '#'+Math.floor(Math.random()*0xffffff).toString(16)
+  const lineStyle2:string = '#'+Math.floor(Math.random()*0xffffff).toString(16)
   
-  let rotate = 0
+  let rotate:number = 0
   requestAnimationFrame(function animate(){
     requestAnimationFrame(animate)
   
@@ -71,25 +62,25 @@ onload = ()=>{
         showPoints: false,
         points: [...Array(pointsNum)].map((v, i) => {
 
-          var frequencyData = dataArray.slice(0,dataArray.length*.5)
+          const frequencyData:Uint8Array = dataArray.slice(0,dataArray.length*.5)
         
-          var frAvg = Math.pow(getAvg(frequencyData)/255,.3)
+          const frAvg:number = Math.pow(avg(frequencyData)/255,.3)
 
-          let t = simplex.noise3D(
+          const t:number = simplex.noise3D(
             Math.cos(i / (pointsNum ) * Math.PI * 2),
             Math.sin(i / (pointsNum ) * Math.PI * 2),
             frAvg*2
           )
-          let selfRadius = 140 + t*20
-          let x = width * .5 + Math.cos(i / (pointsNum ) * Math.PI * 2) * selfRadius
-          let y = height * .5 + Math.sin(i / (pointsNum ) * Math.PI * 2) * selfRadius
+          const selfRadius = 140 + t*20
+          const x = width * .5 + Math.cos(i / (pointsNum ) * Math.PI * 2) * selfRadius
+          const y = height * .5 + Math.sin(i / (pointsNum ) * Math.PI * 2) * selfRadius
 
           return {
             x, y
           }
         }),
         ctx: c,
-        start(ctx) {
+        start(ctx:CanvasRenderingContext2D) {
           ctx.shadowBlur = 10;
           ctx.shadowColor = 'rgba(255,255,255,.8)'
           ctx.lineWidth = 3
@@ -101,7 +92,7 @@ onload = ()=>{
         showPoints: false,
         points: [...Array(pointsNum)].map((v, i) => {
 
-          var frequencyData = dataArray.slice(0,dataArray.length*.5)
+          const frequencyData = dataArray.slice(0,dataArray.length*.5)
         
           const frAvg:number = Math.pow(getAvg(frequencyData)/255,.5)
           
@@ -121,7 +112,7 @@ onload = ()=>{
           }
         }),
         ctx: c,
-        start(ctx) {
+        start(ctx:CanvasRenderingContext2D) {
           ctx.shadowBlur = 10;
           ctx.shadowColor = 'rgba(255,255,255,.8)'
           ctx.lineWidth = 5

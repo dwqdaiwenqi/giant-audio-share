@@ -104,11 +104,7 @@ const scaleTimeDomain = ({map,width,height,slices}:IScaleTimeDomainParams)=>{
 
 onload = ()=>{
 
-
-  
-
-
-  var media = './src/assets/miku.mp3'
+  const media = './src/assets/miku.mp3'
 
 
   const [width,height] = [document.body.offsetWidth,document.body.offsetHeight]
