@@ -18,7 +18,7 @@ onload = ()=>{
 
 
   const $mat = document.createElement('img')
-  $mat.src = './src/assets/miku-poster.png'
+  $mat.src = './src/assets/hutao-poster.jpeg'
   const matWidth = 300
   const matHeight = 300
 
@@ -31,14 +31,6 @@ onload = ()=>{
   $play.onclick = ()=>{
    
     $play.style.display = 'none'
-
-    // const source:MediaElementAudioSourceNode = context.createMediaElementSource($audio);
-    // source.connect(analyser);
-    // analyser.connect(context.destination);
-    // const bufferLength:number = analyser.frequencyBinCount; // half fftSize
-    // dataArray = new Uint8Array(bufferLength);
-
-    // canPlay = true
 
     loadAudio('./src/assets/miku.mp3').then(({analyser,source})=>{
       window.analyser = analyser
@@ -122,18 +114,6 @@ onload = ()=>{
             frAvg*2
           )
           let selfRadius = 150 + noise*20
-
-          
-          // 初始坐标为圆参数方程
-          // 噪声进行随机平滑，使用节拍强度作为噪声的偏移量
-          // 多个二次贝塞尔曲线进行平滑连接
-
-          /////////////////////
-
-          // // let selfRadius = 150 + t*20
-          // let x = width * .5 + Math.cos(i / (pointsNum ) * Math.PI * 2) * 150
-          // let y = height * .5 + Math.sin(i / (pointsNum ) * Math.PI * 2) * 150
-
 
           return {
             x:width * .5 + x * selfRadius, 

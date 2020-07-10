@@ -22,7 +22,7 @@ onload = function () {
         return value / values.length;
     };
     var $mat = document.createElement('img');
-    $mat.src = './src/assets/miku-poster.png';
+    $mat.src = './src/assets/hutao-poster.jpeg';
     var matWidth = 300;
     var matHeight = 300;
     var $play = document.querySelector('#play');
@@ -30,12 +30,6 @@ onload = function () {
     var dataArray;
     $play.onclick = function () {
         $play.style.display = 'none';
-        // const source:MediaElementAudioSourceNode = context.createMediaElementSource($audio);
-        // source.connect(analyser);
-        // analyser.connect(context.destination);
-        // const bufferLength:number = analyser.frequencyBinCount; // half fftSize
-        // dataArray = new Uint8Array(bufferLength);
-        // canPlay = true
         loadAudio('./src/assets/miku.mp3').then(function (_a) {
             var analyser = _a.analyser, source = _a.source;
             window.analyser = analyser;
@@ -92,13 +86,6 @@ onload = function () {
                     var y = Math.sin(i / (pointsNum_1) * Math.PI * 2);
                     var noise = simplex.noise3D(x, y, frAvg * 2);
                     var selfRadius = 150 + noise * 20;
-                    // 初始坐标为圆参数方程
-                    // 噪声进行随机平滑，使用节拍强度作为噪声的偏移量
-                    // 多个二次贝塞尔曲线进行平滑连接
-                    /////////////////////
-                    // // let selfRadius = 150 + t*20
-                    // let x = width * .5 + Math.cos(i / (pointsNum ) * Math.PI * 2) * 150
-                    // let y = height * .5 + Math.sin(i / (pointsNum ) * Math.PI * 2) * 150
                     return {
                         x: width * .5 + x * selfRadius,
                         y: height * .5 + y * selfRadius

@@ -36,7 +36,6 @@ const loadAudio:ILoadAudo = (url:string):Promise<ILoadAudoResult> => {
 window.loadAudio = loadAudio
 
 
-
 const drawClosedCurve = ({ points, start, ctx, showPoints }) => {
   const ctrlPoint = {}
   const ctrlPoint1 = {}
@@ -64,11 +63,9 @@ const drawClosedCurve = ({ points, start, ctx, showPoints }) => {
 
 window.drawClosedCurve = drawClosedCurve
 
-
-
-function avg(arr){
-  var total = arr.reduce(function(sum, b) { return sum + b; });
-  return (total / arr.length);
- }
+const avg = (arr:number[]):number=>{
+  const total:number = arr.reduce((sum, b)=> { return sum + b; })
+  return (total / arr.length)
+}
 
  window.avg = avg

@@ -161,7 +161,7 @@ requestAnimationFrame(function animate(){
 
     material.uniforms.frAvg.value = Math.pow(avg(dataArray)/(255),.5)
     material.uniforms.time.value += (now - pre) * .0008
-    
+      
     pre = now;
 
   }

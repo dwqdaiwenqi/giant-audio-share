@@ -54,8 +54,8 @@ var drawClosedCurve = function (_a) {
     ctx.restore();
 };
 window.drawClosedCurve = drawClosedCurve;
-function avg(arr) {
+var avg = function (arr) {
     var total = arr.reduce(function (sum, b) { return sum + b; });
     return (total / arr.length);
-}
+};
 window.avg = avg;
